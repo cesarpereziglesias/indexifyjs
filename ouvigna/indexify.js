@@ -26,27 +26,26 @@
         },
 
         _findItems: function(level, $from) {
-            var _self = this,
+            var headers,
+                _self = this,
                 items = [];
 
-            level = level == undefined?1:level;
+            level = level === undefined?1:level;
             if (level == 1)
             {
-                $("h" + level, this.$source).each(function() {
-                    var $this = $(this);
-                    items.push({"$element": $this,
-                                "children": _self._findItems(level + 1, $this)});
-                });
+                headers = $("h" + level, this.$source);
             }
             else
             {
                 $limit = $($from.nextAll("h" + (level-1)).get(0));
-                $from.nextUntil($limit, "h" + level).each(function() {
-                    var $this = $(this);
-                    items.push({"$element": $this,
-                                "children": _self._findItems(level + 1, $this)});
-                });
+                headers = $from.nextUntil($limit, "h" + level);
             }
+            headers.each(function() {
+                var $this = $(this);
+                items.push({"$element": $this,
+                            "children": _self._findItems(level + 1, $this)});
+            });
+
             return items;
         },
 
