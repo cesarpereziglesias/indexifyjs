@@ -1,0 +1,17 @@
+@import url('http://roboto-webfont.googlecode.com/svn/trunk/roboto.all.css');
+
+body {
+    background-color: #FEFEFE;
+    color: #333;
+    font: 14px "Roboto";
+    font-weight: 300;
+}
+
+h1, h2, h3, h4, h5 {
+    color: #4CE01B;
+    font-weight: 100;
+}
+
+div#index, div#content {
+    float: left;
+}

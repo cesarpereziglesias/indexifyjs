@@ -6,13 +6,15 @@
         options: {
             source: null,
             destination: null,
-            mode: null
+            mode: null,
+            classSelector: ""
         },
     
         _create: function() {
             this._setOptions();
-            var items = this._findItems();
-            this._buildHTML(items);
+            var items = this._findItems(),
+                $html = this._buildHTML(items);
+            this._setHTML($html);
         },
 
         _setOptions: function() {
@@ -40,6 +42,9 @@
                 $limit = $($from.nextAll("h" + (level-1)).get(0));
                 headers = $from.nextUntil($limit, "h" + level);
             }
+            if (this.options.classSelector) {
+                headers = headers.filter("." + this.options.classSelector);
+            }
             headers.each(function() {
                 var $this = $(this);
                 items.push({"$element": $this,
@@ -50,16 +55,24 @@
         },
 
         _buildHTML: function(items) {
-            var $listItems = $("<ul>");
+            var $self = this,
+                $listItems = $("<ul>");
             $.each(items, function() {
                 var $item = $("<li>").
                     html(this.$element.html()).
                     appendTo($listItems);
+                if ("children" in this && this.children.length)
+                {
+                    $item.append($self._buildHTML(this.children));
+                }
             });
+            return $listItems;
+        },
 
+        _setHTML: function($html) {
             if (typeof this.$destination[this.mode] === "function")
             {
-                this.$destination[this.mode]($listItems);
+                this.$destination[this.mode]($html);
             }
         }
     });
